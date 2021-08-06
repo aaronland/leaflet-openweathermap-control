@@ -1,0 +1,8 @@
+.leaflet-openweathermap-container {
+	background-color:#fff;
+}
+
+.leaflet-openweathermap-conditions {
+	// padding:10px;
+	display:inline-block;
+}
