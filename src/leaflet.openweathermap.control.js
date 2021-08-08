@@ -1,7 +1,8 @@
-// version v0.0.0
+// version v1.0.0
 
 L.Control.OpenWeatherMap = L.Control.extend({
     _map: null,
+    _features: [],
     options: {
         position: 'topright',
 	appid: '',
@@ -28,6 +29,10 @@ L.Control.OpenWeatherMap = L.Control.extend({
 	    trigger.style.display = "inline-block";
 	});
 	    
+	map.on("moveend", function(){
+
+	});
+	
 	var on_trigger = function(){
 
 	    trigger.style.display = "none";
@@ -44,11 +49,65 @@ L.Control.OpenWeatherMap = L.Control.extend({
 	    openweathermap.api.call("weather", params)
 			  .then(rsp => {
 
-			      var name = rsp.name;
-			      var temp = rsp.main.temp;
-			      var wind = rsp.wind;
+			      geom = {
+				  "type": "Point",
+				  "coordinates": [ center.lng, center.lat ],
+			      };
+			      
+			      var f = {
+				  "type": "Feature",
+				  "properties": rsp,
+				  "geometry": geom,
+			      }
 
-			      conditions.innerText = name + " " + temp + " " + wind.speed + " (" + wind.gust + ") @" + wind.deg; 
+			      var popup;
+			      
+			      function onEachFeature(feature, layer) {
+
+				  var props = feature.properties;
+				  console.log("PROPS", props);
+				  
+				  var name = props.name;
+				  var temp = props.main.temp;
+				  var wind = props.wind;
+
+				  var ts = props.dt;
+				  var dt = new Date(ts * 1000);
+				  
+				  var txt = name + ", " + temp + " degrees<br />";
+				  txt += "Winds at " + wind.speed;
+
+				  if (wind.gust){
+ 				      txt += " (with gusts up " + wind.gust + ")";
+				  }
+
+				  txt += " @" + wind.deg; 				  
+				  txt += "<br />";
+				  txt += dt.toLocaleString();
+				  
+				  popup = layer.bindPopup(txt);
+			      }
+
+			      var geojsonMarkerOptions = {
+				  radius: 8,
+				  fillColor: "#ff7800",
+				  color: "#000",
+				  weight: 1,
+				  opacity: 1,
+				  fillOpacity: 0.8
+			      };
+			      
+			      var layer_args = {
+				  onEachFeature: onEachFeature,
+				  pointToLayer: function (feature, latlng) {
+				      return L.circleMarker(latlng, geojsonMarkerOptions);
+				  }
+			      };
+			      
+			      var layer = L.geoJSON(f, layer_args);
+
+			      layer.addTo(map);
+			      popup.openPopup();
 			  })
 			  .catch((err) => {
 			      console.log("SAD", err);
