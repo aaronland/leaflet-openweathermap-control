@@ -7,6 +7,35 @@ L.Control.OpenWeatherMap = L.Control.extend({
         position: 'topright',
 	appid: '',
 	units: 'standard',
+	markerFunc: function(feature){
+
+	    var props = feature.properties;
+
+	    var name = props.name;
+	    var temp = props.main.temp;
+	    var wind = props.wind;
+	    
+	    var ts = props.dt;
+	    var dt = new Date(ts * 1000);
+
+	    var el = document.createElement("div");
+
+	    el.appendChild(document.createTextNode(name + ", " + temp + " degrees"));
+
+	    el.appendChild(document.createElement("br"));
+	    
+	    el.appendChild(document.createTextNode("Winds at " + wind.speed));
+
+	    if (wind.gust){
+ 		el.appendChild(document.createTextNode(" (with gusts up " + wind.gust + ")"));
+	    }
+
+	    el.appendChild(document.createTextNode(" @" + wind.deg));
+	    el.appendChild(document.createElement("br"));	    
+
+	    el.appendChild(document.createTextNode(dt.toLocaleString()));
+	    return el;
+	},
     },
 
     onAdd: function(map) {
@@ -17,15 +46,17 @@ L.Control.OpenWeatherMap = L.Control.extend({
 	
 	var container = L.DomUtil.create('div','leaflet-bar leaflet-control leaflet-openweathermap-container');
 
-	var conditions = L.DomUtil.create('span', 'leaflet-bar-part leaflet-openweathermap-conditions', container);
+	var spinner_wrapper = L.DomUtil.create('div', 'leaflet-bar-part leaflet-openweathermap-spinner', container);
+	spinner_wrapper.setAttribute("id", "spinner");
+
+	var spinner = L.DomUtil.create('div', 'leaflet-bar-part spinner', spinner_wrapper);
 	
         var trigger = L.DomUtil.create('a', 'leaflet-control-image-button leaflet-bar-part leaflet-openweathermap-trigger', container);
         trigger.href = '#';
 	
-	trigger.innerText = "[?]";
+	// trigger.innerText = "[?]";
 
 	map.on("movestart", function(){
-	    conditions.innerText = "";
 	    trigger.style.display = "inline-block";
 	});
 	    
@@ -36,6 +67,7 @@ L.Control.OpenWeatherMap = L.Control.extend({
 	var on_trigger = function(){
 
 	    trigger.style.display = "none";
+	    spinner_wrapper.style.display = "inline-block";
 	    
 	    var center = map.getCenter();
 	    
@@ -49,6 +81,8 @@ L.Control.OpenWeatherMap = L.Control.extend({
 	    openweathermap.api.call("weather", params)
 			  .then(rsp => {
 
+			      spinner_wrapper.style.display = "none";
+			      
 			      geom = {
 				  "type": "Point",
 				  "coordinates": [ center.lng, center.lat ],
@@ -63,29 +97,8 @@ L.Control.OpenWeatherMap = L.Control.extend({
 			      var popup;
 			      
 			      function onEachFeature(feature, layer) {
-
-				  var props = feature.properties;
-				  console.log("PROPS", props);
-				  
-				  var name = props.name;
-				  var temp = props.main.temp;
-				  var wind = props.wind;
-
-				  var ts = props.dt;
-				  var dt = new Date(ts * 1000);
-				  
-				  var txt = name + ", " + temp + " degrees<br />";
-				  txt += "Winds at " + wind.speed;
-
-				  if (wind.gust){
- 				      txt += " (with gusts up " + wind.gust + ")";
-				  }
-
-				  txt += " @" + wind.deg; 				  
-				  txt += "<br />";
-				  txt += dt.toLocaleString();
-				  
-				  popup = layer.bindPopup(txt);
+				  var el = self.options.markerFunc(feature);
+				  popup = layer.bindPopup(el);
 			      }
 
 			      var geojsonMarkerOptions = {
@@ -110,6 +123,7 @@ L.Control.OpenWeatherMap = L.Control.extend({
 			      popup.openPopup();
 			  })
 			  .catch((err) => {
+			      spinner_wrapper.style.display = "none";
 			      console.log("SAD", err);
 			  });
 	    

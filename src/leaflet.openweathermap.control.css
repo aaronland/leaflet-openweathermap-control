@@ -6,3 +6,35 @@
 	// padding:10px;
 	display:inline-block;
 }
+
+.leaflet-openweathermap-trigger {
+	/* https://thenounproject.com/search/?q=weather+conditions&i=122151 */
+	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgEAIAAACsiDHgAAAEC0lEQVRYw+1XO0grTRQ+u8n6LhQSSBNsIoEIgmgupBATsRJREVsfURARBE2hCNqIIYLaRRC0EhOMoCipBBMTEZ8EC1EEUQtXRBJRiebFzpxbzBaB25jf6+Pn+lXDN2fOfN/O48xyiIiI8L8F/9UCfgx8tYAfA18t4PsYkEACSW5PwARMgBGMYIRneIZnIECAAALCX77x3mcgAhGIyO0TOIETck7OyTn60Y9+OIIjOKIhGqIhYiEWYiFaoiVaukgX6SKu4RquwRVcwZWcgQIFmrEGzBQJTGCCNambuqlb8kpeyUteySt5ZXxKTIkpMWFP2BN2edQe7uEeUqRIZSaOcYxTHdVRHYoooijz6TFvAPeuQrYO67AOjdAIjXiDN3jjVXlVXpWj39Hv6H8oeCh4KNCFdCFdqNhcbC42lx+UH5QfGKuMVcYq7Zx2Tjun2lftq/YhC7IgCzjggINCKITCj1mBBCYwQXpJL+llxMzmzObMpjPHmePMaTG0GFoMJbMlsyWzvI7X8TqWf3BwcHBwcKV9pX2lXV+nr9PXMT6rKKsoq2j8dPx0/JRlI5NkkkziAz7gw9tFZWIgilGMSi7JJbkY0WPrsfXYmKCl5FJyKbnl3nJvudM/0NTo1OjUKIuf9kx7pj3pvaUNpQ2lDWSezJN5eRYrWtH6dlGZHGK2xGpQg5oRvI/38b7m1ubW5lZPrifXkzsWHguPhcEOdrCzGGFZWBaWRb2oF/Vek9fkNaWnrLBV2CpsfBffxXfRGI3RGPRBH/R9zBZ6wRd8kXakHWmHER3mDnOHeaN2o3ajNj4UH4oP2ZQ2pU1ZVFZUVlTG8hs1Ro1RU+Ov8df4O+s76zvrnU3OJmdTMBgMBoMxbUwb08r5R3AERzLQk/EWYgYCUkAKyAbWOtY61laPV49Xj9MD7xx3jjvHaeA0cBp4TD2mHlNyxwVe4AU+4RM+MYLe03t6j7u4i7tyDEGC5GO2UPpGYhBBBFERVAQVQUaktlPbqW2NRWPRWAzVhmpDdaFQKBQKTDqZITNkRhIlURLpL/qL/uIGuAFuAExgAhMkIQlJ4IHPpDq9r5Cx6+8aruGaEcph5bByGM/wDM/oLb2lt1AABVDASZzESQq7wq6wKw1Kg9LAH/KH/CG4wAUuOVs2ZEN2phKU7zLwJyIQgQhn5aycVV6qF3iBl788Sxp+HnNfjX/QQB7kQZ48WM2reTUncAIn/Nn7/Qyw17wAAshypW6pW+rGBVzABTkmClGIflcDAgggcD7Ox/kYURmtjFZGNXFNXBNnDHfJXXKXn2ngfc/pb4DMz0AKUpBiTWzDNmyTfx0ZWDX9RGS+AuwksCoVhjCE5YObD/mQ/5nS/6uBb4Z/sA58M/wY+Gr8BpLEG8wppLiQAAAAAElFTkSuQmCC");
+	height:32px;
+	width:32px;
+
+}
+
+/* https://stephanwagner.me/only-css-loading-spinner */
+
+#spinner {
+	display:none;
+	background-color:#fff;
+}
+
+@keyframes spinner {
+	to {transform: rotate(360deg);}
+}
+ 
+.spinner:after {
+	content: '';
+	box-sizing: border-box;
+	width: 20px;
+	height: 20px;
+	margin:5px;
+	border-radius: 100%;
+	border: 2px solid #ccc;
+	border-top-color: #146e8e;
+	animation: spinner .6s linear infinite;
+	display: inline-block;
+}
